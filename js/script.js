@@ -1,12 +1,10 @@
 // //console.log("Test");
 
-//section 3
+//section 3: The "Name" field 
+
 const userName = document.querySelector('#name');
-userName.focus();
-//console.log(Name);
-//section 4 - Job Role 
+userName.focus(); //focus state is created to focus the name element 
 const job_role = document.querySelector('#title');
-//console.log(Job_Role);
 const other_job_role = document.querySelector('#other-job-role');
 other_job_role.hidden = true;
 // information from mozilla web docs "Element.hidden"
@@ -19,14 +17,17 @@ job_role.addEventListener('change',(event)=>{
     });
 
 //section 5- T-shirt Info 
+//variables are created to highlight the design and color of shirt selected 
 const design = document.querySelector('#design');
 const color = document.querySelector('#color');
 const option = color.children;
-// console.log(Design);
-// console.log(Color);
-// console.log(Option);
 
-color.disabled = true;
+color.disabled = true; //the Shirt Color element is disabled 
+
+/*event listener is created to show certain design per theme selection
+two variables were created to show value and data-theme
+followed by a conditional statement that checks if variables are equal to each other 
+allowing selection specific to theme */
 
 design.addEventListener('change',(event)=>{
     color.disabled = false;
@@ -42,45 +43,43 @@ design.addEventListener('change',(event)=>{
         }
     }});
 
-    //section 6: Register for Activities 
+//section 6: Register for Activities 
 
     const register = document.querySelector('#activities');
     const activitiesCost = document.querySelector('#activities-cost');
-    // console.log(register);
-    // console.log(activitiesCost);
     let totalCostOfActivities = 0;
-   
-    register.addEventListener('change',(event)=>{
-        const click = event.target;
+   /* 
+   created an event listener for activity selection that calculates the cost of the total selection
+   addition and subtraction of the activity is removed or added to the total 
+    form is updated by using the innerHTML property
+   */
+    register.addEventListener('change',(e)=>{
+        const click = e.target;
         const dataCost = parseInt(click.getAttribute('data-cost'));
-//adding or subtracting the cost based on the selection or click 
         if (click.checked){
             totalCostOfActivities += dataCost;
-            console.log(totalCostOfActivities);
         }else{
             totalCostOfActivities -= dataCost;
-            console.log(totalCostOfActivities);
         }
         activitiesCost.innerHTML = 'Total: $' + totalCostOfActivities;
         });
 
 //section 7: Payment Info
+
 const paymentType = document.getElementById('payment');
 const creditCard = document.getElementById('credit-card');
 const paypal = document.getElementById('paypal');
 const bitcoin = document.getElementById('bitcoin');
 
-//console.log(creditCard);
-// console.log(paypal);
-// console.log(bitcoin);
-
 paypal.hidden = true;
 bitcoin.hidden = true;
 
+//payment variable is used to target the second child of the element 
 paymentType[1].setAttribute('selected', ' ');
 
-paymentType.addEventListener('change',(event)=>{
-    let selected = event.target.value;
+//created variable to make conditional if else statements depending on the payment selection clicked
+paymentType.addEventListener('change',(e)=>{
+    let selected = e.target.value;
     if (selected === 'paypal'){
         creditCard.style.display = 'none'
         paypal.style.display = 'inline';
@@ -98,22 +97,20 @@ paymentType.addEventListener('change',(event)=>{
 
 //section 8: Form Validation
 //const userName = document.querySelector('#name').focus();
-const email = document.getElementById('email');
-// console.log(email);
-const cardNumber = document.getElementById('cc-num');
-// console.log(cardNumber);
 //const register = document.querySelector('#activities');
+const email = document.getElementById('email');
+const cardNumber = document.getElementById('cc-num');
 const zip = document.getElementById('zip');
-// console.log(zip);
 const cvv = document.getElementById('cvv');
-// // console.log(cvv);
 const form = document.querySelector('form');
-// // console.log(form);
 
+/* 
+functions are created to test each section of the form using regex expressions
+conditionals are used to display hint if input is invalid 
+*/
 function nameValidation(){
     let nameValue = userName.value.trim();
     const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameValue);
-    //console.log(nameIsValid);
     if (nameIsValid === true){
         userName.parentNode.className = 'valid';
         userName.parentNode.lastElementChild.style.display = 'none';
@@ -138,20 +135,18 @@ function emailValidation(){
     return emailIsValid;
 }
 }
-
+//stuck here--------unsure how to show the red box around the activities 
 let registerBox = document.querySelectorAll('[type= "checkbox"]:checked')
 function registerValidation(){
-    // let registerBox = document.querySelectorAll('[type= "checkbox"]:checked');
     let activitiesBox = document.getElementById('activities-box')
-    if (registerBox.length > 0){
-        activitiesBox.parentNode.classList= 'valid';
+    if (totalCostOfActivities > 0){
+        activitiesBox.parentNode.classList.replace = ('invalid', 'valid')
         activitiesBox.parentNode.lastElementChild.style.display = 'none';
         return true
     }else{
-        activitiesBox.parentNode.className = 'invalid';
+        activitiesBox.parentNode.className.add = 'invalid';
         activitiesBox.lastElementChild.style.display = 'block';
-        activitiesBox.parentNode.lastElementChild.textContent = 'Please register for an activity.';
-        return false;
+        activitiesBox.parentNode.lastElementChild.textContent = 'Please choose at least one activity';
     }
 }
 
@@ -185,7 +180,7 @@ function zipValidation (){
 
 function cvvValidation(){
     let cvvValue = cvv.value.trim();
-    const cvvIsValid = /^d{3}$/.test(cvvValue);
+    const cvvIsValid = /^[0-9]{3}$/.test(cvvValue);
     if (cvvIsValid === true){
         cvv.parentNode.className = 'valid';
         cvv.parentNode.lastElementChild.style.display = 'none';
@@ -193,7 +188,6 @@ function cvvValidation(){
         cvv.parentNode.className = 'invalid';
         cvv.parentNode.lastElementChild.style.display = 'block';
         cvv.parentNode.lastElementChild.textContent = 'Please enter a valid cvv';
-        return cvvIsValid;
     return cvvIsValid;
     }
 }
@@ -201,20 +195,22 @@ function cvvValidation(){
 function paymentValidation(){
     if (paymentType.value === 'credit-card'){
         if (cardNumberValidation()&& cvvValidation() && zipValidation()){
-        return true;
+            return true;
         } else {
             return false;
         }
     } else if (paymentType.value === 'paypal'){
-            return true
+            return true;
     } else if (paymentType.value === 'bitcoin'){
-            return true
+            return true;
     }
 }
 
 
 
 //when form is submitted to detect form submission 
+//needs work, unable to refresh after submitting 
+
  form.addEventListener('submit', (e) => {
      if (nameValidation() && emailValidation() && registerValidation() && paymentValidation()) {
         } else {
