@@ -105,8 +105,9 @@ const cvv = document.getElementById('cvv');
 const form = document.querySelector('form');
 
 /* 
-functions are created to test each section of the form using regex expressions
+helper functions are created to test each section of the form using regex expressions
 conditionals are used to display hint if input is invalid 
+project warmups are used as a guide to create this section 
 */
 
 function validationPass(element){
@@ -132,7 +133,7 @@ function nameValidation(){
     return nameIsValid;
 }
 
-//         
+
 function emailValidation(){
     let emailValue = email.value.trim();
     const emailIsValid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValue);
@@ -144,7 +145,11 @@ function emailValidation(){
     return emailIsValid;
 }
 
-//stuck here--------unsure how to show the red box around the activities 
+/* 
+created a variable that selects activities section from form, this will be used to 
+validate if a selection was made. If selection is made, there will be a cost to the activity, therefore making it more than zero if valid. 
+
+*/
 let activitiesBox = document.getElementById('activities-box')
 
 function registerValidation(){
@@ -157,7 +162,7 @@ function registerValidation(){
     return activitySectionIsValid;
 }
 
-
+//functions created for credit card validation (card number, zip code, cvv)
 function cardNumberValidation(){
     let cardNumberValue = cardNumber.value.trim();
     const cardNumberIsValid = /^\d{13,16}$/.test(cardNumberValue)
@@ -191,6 +196,8 @@ function cvvValidation(){
     return cvvIsValid;
     }
 
+    /*function created for what values should appear if a certain payment Type is chosen,
+    credit card selection requires more card number, cvv, and zip validation */
 
 function paymentValidation(){
     if (paymentType.value === 'credit-card'){
@@ -208,8 +215,7 @@ function paymentValidation(){
 
 
 
-//when form is submitted to detect form submission 
-//needs work, unable to refresh after submitting 
+//eventListener is created to detect form submission when clicking on submit, submission is prevented if validation does not pass 
 
  form.addEventListener('submit', (e) => {
     if (!nameValidation()) {
@@ -223,11 +229,11 @@ function paymentValidation(){
       }
     
       if (!registerValidation()) {
-        //console.log('Invalid language total prevented submission');
+        //console.log('Invalid activity selection prevented submission');
         e.preventDefault();
       }
-       if (paymentType.value === 'credit-card'){
-          if (!cardNumberValidation() && !zipValidation() && cvvValidation()){
+    if (paymentType.value === 'credit-card'){
+          if (!cardNumberValidation() && !zipValidation() && !cvvValidation()){
             e.preventDefault();
           }
         }});
@@ -236,6 +242,8 @@ function paymentValidation(){
 
 
 // section 9: Accessibility 
+//event listener are created to highlight focus or blur elements 
+
 let registerBox = document.querySelectorAll('input[type = checkbox]');
 
 for (let i = 0; i < registerBox.length; i++){
