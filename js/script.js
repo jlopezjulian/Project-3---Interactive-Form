@@ -10,7 +10,7 @@ other_job_role.hidden = true;
 // information from mozilla web docs "Element.hidden"
 job_role.addEventListener('change',(event)=>{
     if (event.target.value === 'other'){
-        other_job_role.style.display = 'inline'
+        other_job_role.style.display = 'block'
     }else{
         other_job_role.style.display = 'none';
         }
@@ -82,14 +82,14 @@ paymentType.addEventListener('change',(e)=>{
     let selected = e.target.value;
     if (selected === 'paypal'){
         creditCard.style.display = 'none'
-        paypal.style.display = 'inline';
+        paypal.style.display = 'block';
         bitcoin.style.display = 'none';
     }else if (selected === 'bitcoin'){
         creditCard.style.display = 'none'
         paypal.style.display = 'none';
-        bitcoin.style.display = 'inline';
+        bitcoin.style.display = 'block';
     } else {
-        creditCard.style.display = 'inline'
+        creditCard.style.display = 'block'
         paypal.style.display = 'none';
         bitcoin.style.display = 'none';
     }
@@ -108,93 +108,93 @@ const form = document.querySelector('form');
 functions are created to test each section of the form using regex expressions
 conditionals are used to display hint if input is invalid 
 */
+
+function validationPass(element){
+    element.parentElement.classList.add('valid');
+    element.parentElement.classList.remove('not-valid');
+    element.parentElement.lastElementChild.style.display = "none";
+  }
+
+  function validationFail(element){
+    element.parentElement.classList.add('not-valid');
+    element.parentElement.classList.remove('valid');
+    element.parentElement.lastElementChild.style.display = "block";
+  }
+      
 function nameValidation(){
     let nameValue = userName.value.trim();
     const nameIsValid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameValue);
     if (nameIsValid === true){
-        userName.parentNode.className = 'valid';
-        userName.parentNode.lastElementChild.style.display = 'none';
-    }else{
-        userName.parentNode.className = 'invalid';
-        userName.parentNode.lastElementChild.style.display = 'block';
-        userName.parentNode.lastElementChild.textContent = 'Please enter your name';
-        return nameIsValid;
-    }
+        validationPass(userName);
+      }else{
+         validationFail(userName);
+      }
+    return nameIsValid;
 }
+
 //         
 function emailValidation(){
     let emailValue = email.value.trim();
     const emailIsValid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailValue);
     if (emailIsValid === true){
-        email.parentNode.className = 'valid';
-        email.parentNode.lastElementChild.style.display = 'none';
+        validationPass(email);
     }else{
-        email.parentNode.className = 'invalid';
-        email.parentNode.lastElementChild.style.display = 'block';
-        email.parentNode.lastElementChild.textContent = 'Please enter a valid email.';
+        validationFail(email);
+    }
     return emailIsValid;
 }
-}
+
 //stuck here--------unsure how to show the red box around the activities 
-let registerBox = document.querySelectorAll('[type= "checkbox"]:checked')
+let activitiesBox = document.getElementById('activities-box')
+
 function registerValidation(){
-    let activitiesBox = document.getElementById('activities-box')
-    if (totalCostOfActivities > 0){
-        activitiesBox.parentNode.classList.replace = ('invalid', 'valid')
-        activitiesBox.parentNode.lastElementChild.style.display = 'none';
-        return true
+    let activitySectionIsValid = totalCostOfActivities > 0;
+    if (activitySectionIsValid){
+        validationPass(activitiesBox);
     }else{
-        activitiesBox.parentNode.className.add = 'invalid';
-        activitiesBox.lastElementChild.style.display = 'block';
-        activitiesBox.parentNode.lastElementChild.textContent = 'Please choose at least one activity';
+        validationFail(activitiesBox)
     }
+    return activitySectionIsValid;
 }
+
 
 function cardNumberValidation(){
     let cardNumberValue = cardNumber.value.trim();
     const cardNumberIsValid = /^\d{13,16}$/.test(cardNumberValue)
-    if (cardNumberIsValid === true){
-        cardNumber.parentNode.className = 'valid';
-        cardNumber.parentNode.lastElementChild.style.display = 'none';
+    if (cardNumberIsValid){
+        validationPass(cardNumber);
     }else{
-        cardNumber.parentNode.className = 'invalid';
-        cardNumber.parentNode.lastElementChild.style.display = 'block';
-        cardNumber.parentNode.lastElementChild.textContent = 'Please enter a valid card number.';
-    return cardNumberIsValid;
+        validationFail(cardNumber)
     }
+    return cardNumberIsValid;
 }
 
 function zipValidation (){
     let zipValue = zip.value.trim();
     const zipIsValid = /^[0-9]{5}$/.test(zipValue)
-    if (zipIsValid === true){
-        zip.parentNode.className = 'valid';
-        zip.parentNode.lastElementChild.style.display = 'none';
+    if (zipIsValid){
+        validationPass(zip);
     }else{
-        zip.parentNode.className = 'invalid';
-        zip.parentNode.lastElementChild.style.display = 'block';
-        zip.parentNode.lastElementChild.textContent = 'Please enter a valid zip code.'
+        validationFail(zip)
+    }
     return zipIsValid;
     }
-}
 
 function cvvValidation(){
     let cvvValue = cvv.value.trim();
     const cvvIsValid = /^[0-9]{3}$/.test(cvvValue);
-    if (cvvIsValid === true){
-        cvv.parentNode.className = 'valid';
-        cvv.parentNode.lastElementChild.style.display = 'none';
+    if (cvvIsValid){
+        validationPass(cvv);
     }else{
-        cvv.parentNode.className = 'invalid';
-        cvv.parentNode.lastElementChild.style.display = 'block';
-        cvv.parentNode.lastElementChild.textContent = 'Please enter a valid cvv';
+        validationFail(cvv)
+    }
     return cvvIsValid;
     }
-}
+
 
 function paymentValidation(){
     if (paymentType.value === 'credit-card'){
-        if (cardNumberValidation()&& cvvValidation() && zipValidation()){
+        if (cardNumberValidation() && cvvValidation() && zipValidation()){
             return true;
         } else {
             return false;
@@ -212,18 +212,31 @@ function paymentValidation(){
 //needs work, unable to refresh after submitting 
 
  form.addEventListener('submit', (e) => {
-     if (nameValidation() && emailValidation() && registerValidation() && paymentValidation()) {
-        } else {
-           e.preventDefault();
-           nameValidation();
-           emailValidation();
-           paymentValidation();
-           registerValidation();
-           cvvValidation();
-           zipValidation();
+    if (!nameValidation()) {
+        //console.log('Invalid name prevented submission');
+        e.preventDefault();
+      }
+    
+      if (!emailValidation()) {
+        //console.log('Invalid email prevented submission');
+        e.preventDefault();
+      }
+    
+      if (!registerValidation()) {
+        //console.log('Invalid language total prevented submission');
+        e.preventDefault();
+      }
+       if (paymentType.value === 'credit-card'){
+          if (!cardNumberValidation() && !zipValidation() && cvvValidation()){
+            e.preventDefault();
+          }
         }});
-   
+
+
+
+
 // section 9: Accessibility 
+let registerBox = document.querySelectorAll('input[type = checkbox]');
 
 for (let i = 0; i < registerBox.length; i++){
         registerBox[i].addEventListener('focus',(e)=>{
