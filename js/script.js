@@ -30,16 +30,18 @@ followed by a conditional statement that checks if variables are equal to each o
 allowing selection specific to theme */
 
 design.addEventListener('change',(event)=>{
+    event.preventDefault();
     color.disabled = false;
     for (let i=0; i < option.length; i++){
         const eventTarget = event.target.value;
         const dataTheme = option[i].getAttribute('data-theme');
         // console.log(eventTarget);
-        console.log(dataTheme);
         if (eventTarget === dataTheme){
             option[i].hidden = false;
+            option[i].setAttribute('selected', true);
         }else{
             option[i].hidden = true;
+            option[i].removeAttribute('selected');
         }
     }});
 
@@ -233,7 +235,13 @@ function paymentValidation(){
         e.preventDefault();
       }
     if (paymentType.value === 'credit-card'){
-          if (!cardNumberValidation() && !zipValidation() && !cvvValidation()){
+          if (!cardNumberValidation()){
+            e.preventDefault();
+          }
+          if (!zipValidation()){
+            e.preventDefault();
+          } 
+          if (!cvvValidation()){
             e.preventDefault();
           }
         }});
